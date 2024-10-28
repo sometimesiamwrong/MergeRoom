@@ -1,0 +1,6 @@
+﻿services:
+  mergeroom:
+    image: mergeroom
+    build:
+      context: .
+      dockerfile: MergeRoom/Dockerfile
