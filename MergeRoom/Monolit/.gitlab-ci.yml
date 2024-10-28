@@ -1,0 +1,56 @@
+include:
+  - project: "itechlabs1/ci"
+    ref: master
+    file: "/automated-template.yaml"
+
+stages:
+  - build
+  - deploy
+
+variables:
+#  PRODUCT: unuk         # unukstage/unukpreprod/unukprod
+  DOCKERFILE: "$CI_PROJECT_DIR/Dockerfile"
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+  DOCKER_BUILDKIT: "1"
+  GIT_SUBMODULE_STRATEGY: recursive
+  TAG_PREFIX: "v1.0."
+#  TAG_SUFFIX: "-dev"  #"-dev"/"-pre"/"-prod"
+
+############################
+# Build Jobs
+############################
+
+build merge.bot:
+  extends: .build
+  stage: build
+  variables:
+    APP: merge-bot
+    APPNAME: "DiscordMergeRoomBotCsharpEdition"
+    DEPLOY_IMAGE: "$CI_REGISTRY_IMAGE/merge-bot"
+  tags:
+    - itl
+    - kuber
+
+
+############################
+# Deploy Jobs
+############################
+
+Stage deploy merge.bot:
+  extends: .deploy
+  stage: deploy
+  when: manual
+  needs:
+    - build merge.bot
+  variables:
+    APP: merge-bot
+    DEPLOY_IMAGE: "$CI_REGISTRY_IMAGE/merge-bot"
+    # MIGRATION_IMAGE: "$CI_REGISTRY_IMAGE/unukadmin-migrations"
+    # GITLAB_GROUP: mergebot
+    # PRODUCT: merge-bot
+    TAG_SUFFIX: "-dev"
+  tags:
+    - itl
+    - kuber
+ 
