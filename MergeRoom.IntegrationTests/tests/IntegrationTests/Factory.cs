@@ -1,39 +1,40 @@
-﻿using Discord;
-using Discord.WebSocket;
-using DiscordMergeRoomBotCsharpEdition.Commands;
-using DiscordMergeRoomBotCsharpEdition.Configs;
-using DiscordMergeRoomBotCsharpEdition.GitlabParsing;
-using DiscordMergeRoomBotCsharpEdition.GitlabParsing.Handling;
-using DiscordMergeRoomBotCsharpEdition.GitlabParsing.Workers;
-using DiscordMergeRoomBotCsharpEdition.MongoDB;
-using DiscordMergeRoomBotCsharpEdition.Services;
-using DiscordMergeRoomBotCsharpEdition.Services.PusherServices;
-using DiscordMergeRoomBotCsharpEdition.Services.PusherServices.ChannelServices;
-using DiscordMergeRoomBotCsharpEdition.Services.PusherServices.ThreadServices;
-using DiscordMergeRoomBotCsharpEdition.Webhooks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
-using MongoDB.Driver;
-using Prometheus;
+﻿using MergeRoom.IntegrationTests.tests.IntegrationTests.Services;
 
-namespace DiscordMergeRoomBotCsharpEdition
+namespace MergeRoom.IntegrationTests.tests.IntegrationTests
 {
-    public class Startup
+    public static class Factory
     {
-        public Startup(IConfiguration configuration)
+        public static IServiceProvider ServiceProvider { get; set; }
+
+        public static void StartApp()
         {
-            Configuration = configuration;
+            ProgramTest.StartHost();
         }
 
-        public IConfiguration Configuration { get; }
-
-        public void ConfigureServices(IServiceCollection services)
+        public static Task StopApp()
         {
+            return ProgramTest.StopHost();
+        }
+
+        public static string GetEvironment()
+        {
+            return Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Test";
+        }
+
+        public static IConfiguration GetConfiguration()
+        {
+            var env = GetEvironment();
+
+            return new ConfigurationBuilder()
+                .AddJsonFile($"appsettings.{env}.json")
+                .AddJsonFile($"Configs/serilog.{env}.json", true)
+                .Build();
+        }
+
+        public static void SetupServiceCollection(IServiceCollection services)
+        {
+            var configuration = GetConfiguration();
+            services.AddSingleton(configuration);
             services.AddControllers();
             services.AddHealthChecks();
             services.AddLogging(configure => configure.AddConsole());
@@ -41,13 +42,13 @@ namespace DiscordMergeRoomBotCsharpEdition
             services.AddSingleton<DiscordBot>();
             services.AddSingleton<IMongoClient>(sp =>
             {
-                var settings = MongoClientSettings.FromConnectionString(Configuration["ConnectionString"]);
+                var settings = MongoClientSettings.FromConnectionString(configuration["ConnectionString"]);
                 return new MongoClient(settings);
             });
 
-            services.AddSingleton<DataService>();
+            services.AddScoped<DataService>();
             services.AddSingleton<PrometheusService>();
-            services.AddSingleton<IMongoRepository, MongoRepository>(provider => new MongoRepository(Configuration["ConnectionString"], Configuration["DatabaseName"]));
+            services.AddSingleton<IMongoRepository, MongoRepository>(provider => new MongoRepository(configuration["ConnectionString"], configuration["DatabaseName"]));
 
             services.AddSingleton(sp =>
             {
@@ -73,26 +74,28 @@ namespace DiscordMergeRoomBotCsharpEdition
             });
 
             // Регистрация GitLabService
-            services.AddHttpClient<GitLabService>(client =>
+            services.AddSingleton<HttpClient>(_ =>
             {
+                var client = new HttpClient();
                 client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
+                return client;
             });
+
+            services.AddSingleton<GitLabService>();
+
             services.AddScoped<IEventHook, MergeEventHook>();
             services.AddScoped<IEventHook, NoteEventHook>();
             services.AddScoped<IPusherService, ChannelService>();
-            services.AddTransient<ChannelMergeRequestService>();
             services.AddTransient<ChannelNoteService>();
+            services.AddTransient<ChannelMergeRequestService>();
+            services.AddScoped<IPusherService, ThreadService>();
             services.AddTransient<ThreadNoteService>();
             services.AddTransient<ThreadMergeRequestService>();
-            services.AddScoped<IPusherService, ThreadService>();
+            services.AddSingleton<IPusherService, MockPusherService>();
             services.AddScoped<ChangeHandlerService>();
             services.AddScoped<GitLabParsingService>();
             services.AddScoped<IWorker, Worker>();
             services.AddSingleton<IHostedService, WorkerFather>();
-            services.AddSingleton<ISlashCommandHandler, SetParseDefaultBranchesSlashCommandHandler>();
-            services.AddSingleton<ISlashCommandHandler, RegisterSlashCommandHandler>();
-            services.AddSingleton<IPrefixCommandHandler, ResetChunksPrefixCommandHandler>();
-            services.AddSingleton<IPrefixCommandHandler, PingPrefixCommandHandler>();
 
             services.AddSingleton<DiscordBotConfiguration>(sp => new DiscordBotConfiguration(
                 new PossibleEventKinds
@@ -121,37 +124,27 @@ namespace DiscordMergeRoomBotCsharpEdition
                 });
             });
 
-            services.AddHostedService<PrometheusService>();
-        }
-
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
+            services.AddSingleton<Project>(provider => new Project
             {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.UseRouting();
-
-            app.UseHttpMetrics();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapMetrics();
-                endpoints.MapHealthChecks("/health");
-                endpoints.MapControllers();
+                CreatedAt = BsonDateTime.Create(DateTime.UtcNow),
+                UpdatedAt = BsonDateTime.Create(DateTime.UtcNow),
+                GuildId = 1188839818076098570,
+                GitlabId = 59141501,
+                GitLabLink = "https://gitlab.com/Tekra/testgitlabparsing",
+                CategoryDiscordName = "test_chanel_mr",
+                CategoryDiscordId = 1250457612764319764,
+                ChannelDiscordName = "test_chanel",
+                ChannelDiscordId = 1255048953943162972,
+                AccessToken = "glpat-LoRPKG9boyxyGqD6D-yn",
+                Host = "gitlab.com",
+                Namespace = "Tekra",
+                ProjectName = "testgitlabparsing",
+                ParsedAt = BsonDateTime.Create(DateTime.UtcNow.AddDays(-1)),
+                PusherKind = "thread",
             });
 
-            // Использование Swagger
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-                c.RoutePrefix = "v1/swagger"; // Для отображения Swagger UI на главной странице
-            });
-
-            var bot = app.ApplicationServices.GetRequiredService<DiscordBot>();
-
-            bot.StartAsync(app.ApplicationServices).GetAwaiter().GetResult();
+            services.AddSingleton<GitLabEmulator>();
+            services.AddSingleton<IGitLabHttpRepository, GitLabHttpRepository>();
         }
     }
 }

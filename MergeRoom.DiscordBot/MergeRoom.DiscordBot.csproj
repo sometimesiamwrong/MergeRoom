@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <OutputType>Exe</OutputType>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Discord.Net" Version="3.16.0" />
+      <PackageReference Include="Discord.Net.WebSocket" Version="3.16.0" />
+      <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\MergeRoom.ChangesService\MergeRoom.ChangesService.csproj" />
+      <ProjectReference Include="..\MergeRoom.Domain\MergeRoom.Domain.csproj" />
+      <ProjectReference Include="..\MergeRoom.Extensions\MergeRoom.Extensions.csproj" />
+      <ProjectReference Include="..\MergeRoom.GitlabRepository\MergeRoom.GitlabRepository.csproj" />
+      <ProjectReference Include="..\MergeRoom.MongoRepository\MergeRoom.MongoRepository.csproj" />
+    </ItemGroup>
+
+</Project>
