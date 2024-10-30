@@ -1,15 +1,29 @@
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
-namespace DiscordMergeRoomBotCsharpEdition
+namespace MergeRoom.IntegrationTests.tests.IntegrationTests
 {
-    public class Program
+    public class ProgramTest
     {
-        public static Task Main(string[] args)
+        public static IHost HostApp { get; private set; }
+
+        public static void SetupHost(string[] args)
         {
-            return CreateHostBuilder(args).Build().RunAsync();
+            HostApp = CreateHostBuilder(args).Build();
+
+            Factory.ServiceProvider = HostApp.Services;
+        }
+
+        public static void StartHost()
+        {
+            HostApp.RunAsync();
+        }
+
+        public static Task StopHost()
+        {
+            return HostApp.StopAsync();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args)
@@ -31,7 +45,7 @@ namespace DiscordMergeRoomBotCsharpEdition
                         {
                             options.Limits.MaxRequestBodySize = 1073741824L; //1GiB
                         })
-                        .UseStartup<Startup>();
+                        .UseStartup<StartupTest>();
                 });
         }
     }
