@@ -1,4 +1,7 @@
-﻿namespace MergeRoom.Parsing.Handling
+﻿using MergeRoom.Domain.Entities;
+using MergeRoom.Domain.Entities.GitlabEntities;
+
+namespace MergeRoom.Parsing.Handling
 {
     public static class HandleActionNotes
     {

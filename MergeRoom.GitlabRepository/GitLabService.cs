@@ -61,7 +61,7 @@ namespace MergeRoom.GitlabRepository
             if (!match.Success)
             {
                 Console.WriteLine("The URL format is incorrect. Please check the URL\n" +
-                                  "Example: (https://HOST/NAMESPACE/(?GROUP?)/PROJECTNAME).");
+                                  "Example: (https://HOST/NAMESPACE/(?GROUP?)/PROJECT_NAME).");
             }
 
             var namespaceName = match.Groups["namespace"].Value;

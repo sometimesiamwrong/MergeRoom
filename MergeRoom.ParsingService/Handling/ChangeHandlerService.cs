@@ -56,8 +56,9 @@ namespace MergeRoom.Parsing.Handling
                     var note = item.Key as Note;
                     if (note.NoteType != NoteType.Unknown)
                     {
-                        _logger.LogInformation($"Parsed {note!.Description} Gitlab AUTHOR: {note.NoteCreatorId} ACTION {item.Value} TYPE {note.NoteType} " +
-                                               $"(MR: {data.NewMergeRequest.Title} ID {data.NewMergeRequest.GitlabIId}) in project {data.Project.Namespace}/{data.Project.ProjectName}");
+                        _logger.LogInformation(
+                            $"Parsed {note!.Description} Gitlab AUTHOR: {note.NoteCreatorId} ACTION {item.Value} TYPE {note.NoteType} " +
+                            $"(MR: {data.NewMergeRequest.Title} ID {data.NewMergeRequest.GitlabIId}) in project {data.Project.Namespace}/{data.Project.ProjectName}");
                     }
                 }
             }

@@ -1,6 +1,7 @@
 ﻿using MergeRoom.Domain.Entities;
 using MergeRoom.Domain.Entities.AdditionalEntityes;
 using MergeRoom.Domain.Entities.GitlabEntities;
+using MergeRoom.GitlabRepository;
 using MergeRoom.MongoRepository.MongoDB;
 using MergeRoom.Parsing.Handling;
 using Microsoft.Extensions.Logging;
