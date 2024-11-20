@@ -7,7 +7,6 @@ namespace MergeRoom.Domain.Entities.GitlabEntities
     /// <summary>
     /// Entity for Gitlab note.
     /// </summary>
-    [CollectionName("notes")]
     public class Note : BaseEntity
     {
         public Note() { }

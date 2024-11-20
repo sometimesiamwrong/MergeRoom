@@ -1,12 +1,12 @@
-﻿using MergeRoom.MongoRepositoryr.MongoDB;
-using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MergeRoom.Domain.Entities.GitlabEntities
 {
     /// <summary>
     /// Entity for Gitlab DiffNote.
     /// </summary>
-    [CollectionName("notes")]
+    [Table("notes")]
     public class DiffNote : Note
     {
         public DiffNote(Note note)
@@ -27,7 +27,7 @@ namespace MergeRoom.Domain.Entities.GitlabEntities
         /// <summary>
         /// Position Data if DiffNote
         /// </summary>
-        [BsonElement("position")]
+        [Column("position")]
         public Position Position { get; set; }
 
         /// <summary>

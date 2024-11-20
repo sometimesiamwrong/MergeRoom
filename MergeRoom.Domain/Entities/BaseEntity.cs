@@ -5,23 +5,10 @@ namespace MergeRoom.Domain.Entities
 {
     public class BaseEntity
     {
-        protected BaseEntity(BsonDateTime createdAt, BsonDateTime updatedAt)
-        {
-            CreatedAt = createdAt;
-            UpdatedAt = updatedAt;
-        }
+        public required long Id { get; set; }
 
-        protected BaseEntity()
-        {
-        }
+        public required DateTimeOffset CreatedAt { get; set; }
 
-        [BsonId]
-        public ObjectId Id { get; set; }
-
-        [BsonElement]
-        public BsonDateTime CreatedAt { get; set; } = null!;
-
-        [BsonElement]
-        public BsonDateTime UpdatedAt { get; set; } = null!;
+        public required DateTimeOffset UpdatedAt { get; set; }
     }
 }

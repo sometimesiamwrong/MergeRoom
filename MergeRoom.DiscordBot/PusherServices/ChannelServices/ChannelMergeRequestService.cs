@@ -1,6 +1,5 @@
 ﻿using Discord;
 using MergeRoom.Domain.Entities;
-using MergeRoom.MongoRepositoryr.MongoDB;
 using MergeRoom.Parsing.Handling;
 using System.Text;
 

@@ -10,12 +10,4 @@
       <PackageReference Include="MongoDB.Bson" Version="3.0.0" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Attributes\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\MergeRoom.MongoRepository\MergeRoom.MongoRepository.csproj" />
-    </ItemGroup>
-
 </Project>

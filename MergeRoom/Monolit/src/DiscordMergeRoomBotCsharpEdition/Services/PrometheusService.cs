@@ -1,4 +1,5 @@
 ﻿using DiscordMergeRoomBotCsharpEdition.Entities;
+using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 using Prometheus;
 

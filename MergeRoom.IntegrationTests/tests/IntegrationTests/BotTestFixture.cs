@@ -4,7 +4,6 @@ using MergeRoom.DiscordBot.PusherServices;
 using MergeRoom.Domain.Entities;
 using MergeRoom.Domain.Entities.GitlabEntities;
 using MergeRoom.GitlabRepository;
-using MergeRoom.MongoRepositoryr.MongoDB;
 using MergeRoom.Parsing;
 using MergeRoom.Parsing.GitlabParsing;
 using MergeRoom.Parsing.Handling;

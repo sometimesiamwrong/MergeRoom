@@ -1,8 +1,9 @@
-﻿namespace MergeRoom.Domain.Entities.AdditionalEntityes
+namespace MergeRoom.Parsing
 {
     public record ChangeRow
     {
         private string _text;
+        
         public string Text
         {
             get => _text;

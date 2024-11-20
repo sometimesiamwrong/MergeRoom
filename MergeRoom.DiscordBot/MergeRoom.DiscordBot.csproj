@@ -14,11 +14,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\MergeRoom.ChangesService\MergeRoom.ChangesService.csproj" />
+      <ProjectReference Include="..\MergeRoom.FetchChangesService\MergeRoom.FetchChangesService.csproj" />
       <ProjectReference Include="..\MergeRoom.Domain\MergeRoom.Domain.csproj" />
       <ProjectReference Include="..\MergeRoom.Extensions\MergeRoom.Extensions.csproj" />
       <ProjectReference Include="..\MergeRoom.GitlabRepository\MergeRoom.GitlabRepository.csproj" />
-      <ProjectReference Include="..\MergeRoom.MongoRepository\MergeRoom.MongoRepository.csproj" />
     </ItemGroup>
 
 </Project>

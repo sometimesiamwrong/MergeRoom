@@ -1,5 +1,4 @@
-﻿using MergeRoom.MongoRepositoryr.MongoDB;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace MergeRoom.Domain.Entities
@@ -7,7 +6,6 @@ namespace MergeRoom.Domain.Entities
     /// <summary>
     /// Project mongo-entity.
     /// </summary>
-    [CollectionName("projects")]
     public class Project : BaseEntity
     {
         /// <summary>

@@ -5,7 +5,7 @@ using MongoDB.Bson;
 
 namespace MergeRoom.ChangesService
 {
-    public class CheckChangesService
+    public class GitLabFetchChangesService
     {
         public async Task ParseProjects(List<Project> projects)
         {

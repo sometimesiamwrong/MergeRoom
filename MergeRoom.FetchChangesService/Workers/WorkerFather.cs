@@ -1,5 +1,5 @@
 ﻿using MergeRoom.Domain.Entities;
-using MergeRoom.MongoRepositoryr.MongoDB;
+using MergeRoom.MongoRepository.MongoDB;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,7 +11,6 @@ namespace MergeRoom.ChangesService.Workers
     {
         private readonly TimeSpan _checkInterval;
         private readonly ILogger<WorkerFather> _logger;
-        private readonly IMongoRepository _mongoRepository;
         private readonly IServiceProvider _serviceProvider;
         private int _chunkNumber = -1;
         private Task? _doWorkParsingTask;
@@ -23,12 +22,10 @@ namespace MergeRoom.ChangesService.Workers
         public WorkerFather(
             IServiceProvider serviceProvider,
             ILogger<WorkerFather> logger,
-            IMongoRepository mongoRepository,
             IConfiguration configuration)
         {
             _serviceProvider = serviceProvider;
             _logger = logger;
-            _mongoRepository = mongoRepository;
             ProjectPerChunk = int.Parse(configuration["ProjectPerChunk"]);
             _checkInterval = TimeSpan.FromSeconds(double.Parse(configuration["TimeSecondsCheckToStart"]));
             Chunks = new List<ProjectChunk>();

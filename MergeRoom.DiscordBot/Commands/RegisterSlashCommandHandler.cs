@@ -2,7 +2,6 @@
 using Discord.WebSocket;
 using MergeRoom.Domain.Entities;
 using MergeRoom.GitlabRepository;
-using MergeRoom.MongoRepositoryr.MongoDB;
 
 namespace MergeRoom.DiscordBot.Commands
 {
